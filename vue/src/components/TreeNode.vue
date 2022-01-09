@@ -8,7 +8,7 @@
          :indeterminate="node.state == 1"
          @click.prevent="onCheckboxClick"
       />
-      <div class="title" @click="onTitleClick" @contextmenu="onTitleContextMenu">{{ node.title }}</div>
+      <div class="title" @click="onTitleClick" @contextmenu="onTitleContextMenu" :style="{backgroundImage:node.fileIcon}">{{ node.title }}</div>
     </div>
     <div class="dir-children" v-if="node.isDir" v-show="expanded">
       <TreeNode v-if="node.loading==2" v-for="child in node.children" :node="child"></TreeNode>
@@ -29,21 +29,51 @@ export default {
   },
   props: {
     node: Object,
-    initExpanded: Boolean
+    initExpanded: Boolean,
   },
   inject: [
     'rootContainer'
   ],
+  updated() {
+    // 对于非根节点不做任何处理
+    if (this.node.parent) return
+    // 因为数据已经更新，所以需要重新加载子节点图标
+    this.childrenIconsLoaded = false
+    this.loadChildrenIcons()
+  },
   methods: {
+    async loadChildrenIcons() {
+      // 避免重复加载
+      if (this.childrenIconsLoaded) return
+      this.childrenIconsLoaded = true
+      // 从 a 和 b 中挑选一个本地文件夹
+      var prefix = !native.isRemote(this.rootContainer.a)
+        ? this.rootContainer.a
+        : !native.isRemote(this.rootContainer.b) ? this.rootContainer.b : undefined
+      if (!prefix) return
+      // 加载每个子节点的文件图标
+      for (var child of this.node.children) {
+        if (child.isDir) continue
+        var abspath = child.getAbspath()
+        var fullpath = native.pathJoin(prefix, ...abspath)
+        await native.getFileIcon(fullpath).then(dataUrl => {
+          child.fileIcon = `url('${dataUrl}')`
+        })
+      }
+    },
     onTitleClick() {
       if (!this.node.isDir) return
       this.expanded = !this.expanded
       if (this.expanded) {
-        this.node.load().catch(err => {
-          this.$message.warning(err.message)
-          this.expanded = false
-          this.node.loading = 0
-        })
+        this.node.load()
+          .then(() => {
+            this.loadChildrenIcons()
+          })
+          .catch(err => {
+            this.$message.warning(err.message)
+            this.expanded = false
+            this.node.loading = 0
+          })
       }
     },
     onTitleContextMenu() {

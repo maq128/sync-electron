@@ -92,13 +92,13 @@ const FsMixin = {
     return !!abspath
   },
 
-  pathJoin(parent, name) {
+  pathJoin(parent, ...args) {
     var { abspath } = sshCrackFullpath(parent)
     if (!!abspath) {
       if (!parent.endsWith('/')) parent += '/'
-      return parent + name
+      return parent + args.join('/')
     }
-    return path.join(parent, name)
+    return path.join(parent, ...args)
   },
 
   async readDir(fullpath) {
@@ -316,6 +316,10 @@ const FsMixin = {
 contextBridge.exposeInMainWorld('native', {
   getCommandLineArgv() {
     return ipcRenderer.invoke('get-commandline-argv')
+  },
+
+  getFileIcon(fullpath) {
+    return ipcRenderer.invoke('get-file-icon', fullpath)
   },
 
   chooseDir() {

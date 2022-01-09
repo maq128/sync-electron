@@ -107,18 +107,20 @@ export default {
     })
   },
   methods: {
-    async onBtnCopy() {
-      var done
-      if (this.name == 'aOnly') {
-        done = await Copy(this.a, this.b, this.root, 'ab')
-      } else if (this.name == 'aNewer') {
-        done = await Copy(this.a, this.b, this.root, 'ab')
-      } else if (this.name == 'bNewer') {
-        done = await Copy(this.b, this.a, this.root, 'ba')
-      } else if (this.name == 'bOnly') {
-        done = await Copy(this.b, this.a, this.root, 'ba')
-      }
-      if (done) this.root.setDummy()
+    onBtnCopy() {
+      new Promise(() => {
+        if (this.name == 'aOnly') {
+          return Copy(this.a, this.b, this.root, 'ab')
+        } else if (this.name == 'aNewer') {
+          return Copy(this.a, this.b, this.root, 'ab')
+        } else if (this.name == 'bNewer') {
+          return Copy(this.b, this.a, this.root, 'ba')
+        } else if (this.name == 'bOnly') {
+          return Copy(this.b, this.a, this.root, 'ba')
+        }
+      }).then(() => {
+        this.root.setDummy()
+      })
     },
 
     onBtnReverseCopy() {

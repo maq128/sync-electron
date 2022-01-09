@@ -61,6 +61,13 @@ ipcMain.handle('get-commandline-argv', function () {
   return process.argv
 })
 
+// 获取指定文件的图标
+ipcMain.handle('get-file-icon', function (evt, fullpath) {
+  return app.getFileIcon(fullpath, { size: 'small' }).then(img => {
+    return img.toDataURL()
+  })
+})
+
 // 【选择文件夹】对话框
 ipcMain.handle('choose-dir-dialog', function () {
   var dirs = dialog.showOpenDialogSync(BrowserWindow.getFocusedWindow(), {
@@ -74,7 +81,7 @@ ipcMain.handle('choose-dir-dialog', function () {
 })
 
 // 弹出 context menu
-ipcMain.on('show-context-menu', function (evt, ctx) {
+ipcMain.on('show-context-menu', async function (evt, ctx) {
   const aOptions = {
     label: 'N/A',
     enabled: false,
@@ -85,7 +92,7 @@ ipcMain.on('show-context-menu', function (evt, ctx) {
     aOptions.label = '在资源管理器中查看 ' + aPath
     aOptions.icon = aStat.isDirectory()
       ? path.join(__dirname, 'dir.png')
-      : path.join(__dirname, 'file.png')
+      : await app.getFileIcon(aPath, { size: 'small' })
     aOptions.enabled = true
     aOptions.click = () => {
       shell.showItemInFolder(aPath)
@@ -102,7 +109,7 @@ ipcMain.on('show-context-menu', function (evt, ctx) {
     bOptions.label = '在资源管理器中查看 ' + bPath
     bOptions.icon = bStat.isDirectory()
       ? path.join(__dirname, 'dir.png')
-      : path.join(__dirname, 'file.png')
+      : await app.getFileIcon(bPath, { size: 'small' })
     bOptions.enabled = true
     bOptions.click = () => {
       shell.showItemInFolder(bPath)
