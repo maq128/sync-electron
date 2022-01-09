@@ -23,6 +23,12 @@ yarn add tmp
 # 开发调试
 yarn electron:serve
 
+# 带命令行参数的开发调试
+yarn dev
+npx electron . --enable-reset-mtime
+  - 或者 -
+npx concurrently -k "yarn dev" "yarn electron --enable-reset-mtime"
+
 # 打包
 yarn package
 ```

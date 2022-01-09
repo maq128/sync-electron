@@ -154,7 +154,6 @@ export default {
 <style>
 body {
   margin: 0;
-  min-width: 600px;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

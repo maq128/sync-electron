@@ -57,21 +57,23 @@ export default {
       btnTextCopy: '复制',
       btnTextReverseCopy: '反向复制',
       btnTextRemove: '删除',
+      showResetMtime: false,
     }
   },
   props: {
     name: String
   },
-  computed: {
-    showResetMtime() {
-      // return false
-      return this.name == 'aNewer' || this.name == 'bNewer'
-    }
-  },
   provide() {
     return { rootContainer: this }
   },
   mounted() {
+    native.getCommandLineArgv().then(argv => {
+      for (var arg of argv) {
+        if (arg == '--enable-reset-mtime') {
+          this.showResetMtime = (this.name == 'aNewer' || this.name == 'bNewer')
+        }
+      }
+    })
     if (this.name == 'aOnly') {
       this.btnTextCopy = '复制 A►►B'
       this.btnTextReverseCopy = ''

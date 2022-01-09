@@ -314,6 +314,10 @@ const FsMixin = {
 }
 
 contextBridge.exposeInMainWorld('native', {
+  getCommandLineArgv() {
+    return ipcRenderer.invoke('get-commandline-argv')
+  },
+
   chooseDir() {
     return ipcRenderer.invoke('choose-dir-dialog')
   },

@@ -12,8 +12,12 @@ function createWindow() {
     icon: path.join(__dirname, 'sync.ico'),
     width: 800,
     height: 800,
+    minWidth: 600,
+    minHeight: 500,
+    autoHideMenuBar: true,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      spellcheck: false,
     }
   })
 
@@ -51,6 +55,11 @@ app.on('window-all-closed', function () {
 
 // 在这个文件中，你可以包含应用程序剩余的所有部分的代码，
 // 也可以拆分成几个文件，然后用 require 导入。
+
+// 读取命令行参数
+ipcMain.handle('get-commandline-argv', function () {
+  return process.argv
+})
 
 // 【选择文件夹】对话框
 ipcMain.handle('choose-dir-dialog', function () {
