@@ -39,7 +39,7 @@
     "forge": {
       "packagerConfig": {
         "asar": false,
-        "icon": "vue/dist/favicon",
+        "icon": "electron/sync",
         "ignore": [
           "/\\.vscode",
           "/\\.gitignore",

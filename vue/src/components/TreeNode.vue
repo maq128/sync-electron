@@ -31,6 +31,9 @@ export default {
     node: Object,
     initExpanded: Boolean
   },
+  inject: [
+    'rootContainer'
+  ],
   methods: {
     onTitleClick() {
       if (!this.node.isDir) return
@@ -44,7 +47,11 @@ export default {
       }
     },
     onTitleContextMenu() {
-      this.$ebus.emit('context-menu', this.node.getAbspath())
+      native.showContextMenu({
+        a: this.rootContainer.a,
+        b: this.rootContainer.b,
+        abspath: this.node.getAbspath(),
+      })
     },
     onCheckboxClick() {
       window.setTimeout(() => {

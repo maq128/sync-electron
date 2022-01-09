@@ -8,6 +8,8 @@ const NODE_ENV = process.env.NODE_ENV
 function createWindow() {
   // 创建浏览器窗口
   const mainWindow = new BrowserWindow({
+    title: '文件同步复制',
+    icon: path.join(__dirname, 'sync.ico'),
     width: 800,
     height: 800,
     webPreferences: {
@@ -71,8 +73,10 @@ ipcMain.on('show-context-menu', function (evt, ctx) {
   try {
     const aPath = path.normalize(path.join(ctx.a, ...ctx.abspath))
     const aStat = statSync(aPath)
-    aOptions.label = '在资源管理器中打开 ' + aPath
-    aOptions.icon = path.join(__dirname, aStat.isDirectory() ? 'dir.png' : 'file.png')
+    aOptions.label = '在资源管理器中查看 ' + aPath
+    aOptions.icon = aStat.isDirectory()
+      ? path.join(__dirname, 'dir.png')
+      : path.join(__dirname, 'file.png')
     aOptions.enabled = true
     aOptions.click = () => {
       shell.showItemInFolder(aPath)
@@ -86,8 +90,10 @@ ipcMain.on('show-context-menu', function (evt, ctx) {
   try {
     const bPath = path.normalize(path.join(ctx.b, ...ctx.abspath))
     const bStat = statSync(bPath)
-    bOptions.label = '在资源管理器中打开 ' + bPath
-    bOptions.icon = path.join(__dirname, bStat.isDirectory() ? 'dir.png' : 'file.png')
+    bOptions.label = '在资源管理器中查看 ' + bPath
+    bOptions.icon = bStat.isDirectory()
+      ? path.join(__dirname, 'dir.png')
+      : path.join(__dirname, 'file.png')
     bOptions.enabled = true
     bOptions.click = () => {
       shell.showItemInFolder(bPath)

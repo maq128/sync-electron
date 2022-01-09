@@ -42,15 +42,7 @@ export default {
       return duration
     }
 
-    var pair = { a:'', b:'' }
-    this.$ebus.on('context-menu', abspath => {
-      var ctx = { ...pair, abspath }
-      native.showContextMenu(ctx)
-    })
-
     this.$ebus.on('compare-start', ({ a, b }) => {
-      pair.a = a
-      pair.b = b
       this.loadingMask = this.$loading()
       actStartTimestamp = new Date().getTime()
     })

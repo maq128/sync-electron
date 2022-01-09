@@ -51,6 +51,8 @@ export default {
   },
   data() {
     return {
+      a: '',
+      b: '',
       root: CreateRootNode('尚未比对').setDummy(),
       btnTextCopy: '复制',
       btnTextReverseCopy: '反向复制',
@@ -65,6 +67,9 @@ export default {
       // return false
       return this.name == 'aNewer' || this.name == 'bNewer'
     }
+  },
+  provide() {
+    return { rootContainer: this }
   },
   mounted() {
     if (this.name == 'aOnly') {
