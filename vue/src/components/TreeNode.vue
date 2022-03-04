@@ -122,6 +122,22 @@ export default {
 }
 .cb {
   cursor: pointer;
+  position:relative;
+}
+.cb:indeterminate:after {
+  position:absolute;
+  left:0px;
+  top:0px;
+  width:100%;
+  height:100%;
+  border-radius:3px;
+  content: '▢';
+  color: white;
+  background-color:#57a4ff;
+  font-size: 13px;
+  line-height:13px;
+  text-align:center;
+  vertical-align:middle;
 }
 .dir-children {
   padding-left: 20px;
